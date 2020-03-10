@@ -28,16 +28,6 @@ class FormFieldPrefixerTest extends TestCase
     }
 
     /** @test */
-    public function it_builds_input_identifiers_with_an_array_prefix()
-    {
-        $prefixer = (new FormFieldPrefixer('prefix'))->asArray('arrayKey');
-
-        $this->assertEquals('prefix[arrayKey][abc]', $prefixer->name('abc'));
-        $this->assertEquals('prefix_arrayKey_abc', $prefixer->id('abc'));
-        $this->assertEquals('prefix.arrayKey.abc', $prefixer->validationKey('abc'));
-    }
-
-    /** @test */
     public function it_builds_input_identifiers_as_an_array()
     {
         $prefixer = (new FormFieldPrefixer())->asArray('arrayKey');
@@ -45,5 +35,25 @@ class FormFieldPrefixerTest extends TestCase
         $this->assertEquals('abc[arrayKey]', $prefixer->name('abc'));
         $this->assertEquals('abc_arrayKey', $prefixer->id('abc'));
         $this->assertEquals('abc.arrayKey', $prefixer->validationKey('abc'));
+    }
+
+    /** @test */
+    public function it_builds_input_identifiers_as_an_array_with_prefix()
+    {
+        $prefixer = (new FormFieldPrefixer('prefix'))->asArray('arrayKey');
+
+        $this->assertEquals('prefix_abc[arrayKey]', $prefixer->name('abc'));
+        $this->assertEquals('prefix_abc_arrayKey', $prefixer->id('abc'));
+        $this->assertEquals('prefix_abc.arrayKey', $prefixer->validationKey('abc'));
+    }
+
+    /** @test */
+    public function it_builds_input_identifiers_as_a_multi_dimensional_array_with_prefix()
+    {
+        $prefixer = (new FormFieldPrefixer('prefix'))->asMultiDimensionalArray('arrayKey');
+
+        $this->assertEquals('prefix[arrayKey][abc]', $prefixer->name('abc'));
+        $this->assertEquals('prefix_arrayKey_abc', $prefixer->id('abc'));
+        $this->assertEquals('prefix.arrayKey.abc', $prefixer->validationKey('abc'));
     }
 }
