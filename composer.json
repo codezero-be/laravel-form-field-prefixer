@@ -40,9 +40,6 @@
     },
     "extra": {
         "laravel": {
-            "providers": [
-                "CodeZero\\FormFieldPrefixer\\FormFieldPrefixerServiceProvider"
-            ]
         }
     },
     "config": {
