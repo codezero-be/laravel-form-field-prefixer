@@ -28,6 +28,16 @@ class FormFieldPrefixerTest extends TestCase
     }
 
     /** @test */
+    public function it_builds_input_identifiers_with_a_prefix_via_a_method_call()
+    {
+        $prefixer = (new FormFieldPrefixer())->withPrefix('prefix');
+
+        $this->assertEquals('prefix_abc', $prefixer->name('abc'));
+        $this->assertEquals('prefix_abc', $prefixer->id('abc'));
+        $this->assertEquals('prefix_abc', $prefixer->validationKey('abc'));
+    }
+
+    /** @test */
     public function it_builds_input_identifiers_as_an_array()
     {
         $prefixer = (new FormFieldPrefixer())->asArray('arrayKey');

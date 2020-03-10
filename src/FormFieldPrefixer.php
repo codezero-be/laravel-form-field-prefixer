@@ -29,11 +29,25 @@ class FormFieldPrefixer
     /**
      * FormPrefixer constructor.
      *
-     * @param null $prefix
+     * @param string|null $prefix
      */
     public function __construct($prefix = null)
     {
+        $this->withPrefix($prefix);
+    }
+
+    /**
+     * Set the prefix to be used for the form fields.
+     *
+     * @param string|null $prefix
+     *
+     * @return $this
+     */
+    public function withPrefix($prefix)
+    {
         $this->prefix = $prefix;
+
+        return $this;
     }
 
     /**
