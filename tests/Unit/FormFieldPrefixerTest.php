@@ -66,4 +66,14 @@ class FormFieldPrefixerTest extends TestCase
         $this->assertEquals('prefix_arrayKey_abc', $prefixer->id('abc'));
         $this->assertEquals('prefix.arrayKey.abc', $prefixer->validationKey('abc'));
     }
+
+    /** @test */
+    public function using_multi_dimensional_arrays_without_a_prefix_results_in_a_flat_array()
+    {
+        $prefixer = (new FormFieldPrefixer())->asMultiDimensionalArray('arrayKey');
+
+        $this->assertEquals('abc[arrayKey]', $prefixer->name('abc'));
+        $this->assertEquals('abc_arrayKey', $prefixer->id('abc'));
+        $this->assertEquals('abc.arrayKey', $prefixer->validationKey('abc'));
+    }
 }
