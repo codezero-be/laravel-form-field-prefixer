@@ -40,6 +40,9 @@
     },
     "extra": {
         "laravel": {
+            "aliases": {
+                "FormFieldPrefixer": "CodeZero\\FormFieldPrefixer\\Facades\\FormFieldPrefixer"
+            }
         }
     },
     "config": {

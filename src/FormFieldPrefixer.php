@@ -27,6 +27,18 @@ class FormFieldPrefixer
     protected $multiDimensional = false;
 
     /**
+     * Get a FormFieldPrefixer instance.
+     *
+     * @param string|null $prefix
+     *
+     * @return static
+     */
+    public static function make($prefix = null)
+    {
+        return new static($prefix);
+    }
+
+    /**
      * FormPrefixer constructor.
      *
      * @param string|null $prefix
