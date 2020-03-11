@@ -14,6 +14,7 @@ class FormFieldPrefixerTest extends TestCase
 
         $this->assertEquals('abc', $prefixer->name('abc'));
         $this->assertEquals('abc', $prefixer->id('abc'));
+        $this->assertEquals('abc', $prefixer->for('abc'));
         $this->assertEquals('abc', $prefixer->validationKey('abc'));
     }
 
@@ -24,6 +25,7 @@ class FormFieldPrefixerTest extends TestCase
 
         $this->assertEquals('prefix_abc', $prefixer->name('abc'));
         $this->assertEquals('prefix_abc', $prefixer->id('abc'));
+        $this->assertEquals('prefix_abc', $prefixer->for('abc'));
         $this->assertEquals('prefix_abc', $prefixer->validationKey('abc'));
     }
 
@@ -34,6 +36,7 @@ class FormFieldPrefixerTest extends TestCase
 
         $this->assertEquals('prefix_abc', $prefixer->name('abc'));
         $this->assertEquals('prefix_abc', $prefixer->id('abc'));
+        $this->assertEquals('prefix_abc', $prefixer->for('abc'));
         $this->assertEquals('prefix_abc', $prefixer->validationKey('abc'));
     }
 
@@ -44,6 +47,7 @@ class FormFieldPrefixerTest extends TestCase
 
         $this->assertEquals('abc[arrayKey]', $prefixer->name('abc'));
         $this->assertEquals('abc_arrayKey', $prefixer->id('abc'));
+        $this->assertEquals('abc_arrayKey', $prefixer->for('abc'));
         $this->assertEquals('abc.arrayKey', $prefixer->validationKey('abc'));
     }
 
@@ -54,6 +58,7 @@ class FormFieldPrefixerTest extends TestCase
 
         $this->assertEquals('prefix_abc[arrayKey]', $prefixer->name('abc'));
         $this->assertEquals('prefix_abc_arrayKey', $prefixer->id('abc'));
+        $this->assertEquals('prefix_abc_arrayKey', $prefixer->for('abc'));
         $this->assertEquals('prefix_abc.arrayKey', $prefixer->validationKey('abc'));
     }
 
@@ -64,6 +69,7 @@ class FormFieldPrefixerTest extends TestCase
 
         $this->assertEquals('prefix[arrayKey][abc]', $prefixer->name('abc'));
         $this->assertEquals('prefix_arrayKey_abc', $prefixer->id('abc'));
+        $this->assertEquals('prefix_arrayKey_abc', $prefixer->for('abc'));
         $this->assertEquals('prefix.arrayKey.abc', $prefixer->validationKey('abc'));
     }
 
@@ -74,6 +80,7 @@ class FormFieldPrefixerTest extends TestCase
 
         $this->assertEquals('abc[arrayKey]', $prefixer->name('abc'));
         $this->assertEquals('abc_arrayKey', $prefixer->id('abc'));
+        $this->assertEquals('abc_arrayKey', $prefixer->for('abc'));
         $this->assertEquals('abc.arrayKey', $prefixer->validationKey('abc'));
     }
 
@@ -96,6 +103,7 @@ class FormFieldPrefixerTest extends TestCase
 
         $this->assertEquals('`abc[${ arrayKey }]`', $prefixer->name('abc'));
         $this->assertEquals('`abc_${ arrayKey }`', $prefixer->id('abc'));
+        $this->assertEquals('`abc_${ arrayKey }`', $prefixer->for('abc'));
         $this->assertEquals('`abc.${ arrayKey }`', $prefixer->validationKey('abc'));
     }
 }

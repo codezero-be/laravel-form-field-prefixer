@@ -129,6 +129,18 @@ class FormFieldPrefixer
     }
 
     /**
+     * Get the label's "for" attribute.
+     *
+     * @param string $id
+     *
+     * @return string
+     */
+    public function for($id)
+    {
+        return $this->buildFormFieldIdentifier($id, false);
+    }
+
+    /**
      * Get the validation key for the form field.
      *
      * @param string $key
