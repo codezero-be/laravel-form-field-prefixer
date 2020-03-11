@@ -76,4 +76,26 @@ class FormFieldPrefixerTest extends TestCase
         $this->assertEquals('abc_arrayKey', $prefixer->id('abc'));
         $this->assertEquals('abc.arrayKey', $prefixer->validationKey('abc'));
     }
+
+    /** @test */
+    public function it_detects_a_javascript_key()
+    {
+        $this->assertFalse((new FormFieldPrefixer('arrayKey'))->isJavaScript());
+        $this->assertFalse((new FormFieldPrefixer())->asArray('arrayKey')->isJavaScript());
+        $this->assertFalse((new FormFieldPrefixer())->asMultiDimensionalArray('arrayKey')->isJavaScript());
+
+        $this->assertTrue((new FormFieldPrefixer('${ arrayKey }'))->isJavaScript());
+        $this->assertTrue((new FormFieldPrefixer())->asArray('${ arrayKey }')->isJavaScript());
+        $this->assertTrue((new FormFieldPrefixer())->asMultiDimensionalArray('${ arrayKey }')->isJavaScript());
+    }
+
+    /** @test */
+    public function it_builds_a_template_string_if_a_javascript_array_key_is_provided()
+    {
+        $prefixer = (new FormFieldPrefixer())->asMultiDimensionalArray('${ arrayKey }');
+
+        $this->assertEquals('`abc[${ arrayKey }]`', $prefixer->name('abc'));
+        $this->assertEquals('`abc_${ arrayKey }`', $prefixer->id('abc'));
+        $this->assertEquals('`abc.${ arrayKey }`', $prefixer->validationKey('abc'));
+    }
 }

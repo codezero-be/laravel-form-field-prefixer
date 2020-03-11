@@ -2,6 +2,8 @@
 
 namespace CodeZero\FormFieldPrefixer;
 
+use Illuminate\Support\Str;
+
 class FormFieldPrefixer
 {
     /**
@@ -93,6 +95,16 @@ class FormFieldPrefixer
     }
 
     /**
+     * Determine if any key uses javascript.
+     *
+     * @return bool
+     */
+    public function isJavaScript()
+    {
+        return Str::startsWith($this->prefix, '${') || Str::startsWith($this->arrayKey, '${');
+    }
+
+    /**
      * Get the form field name.
      *
      * @param string $name
@@ -177,7 +189,9 @@ class FormFieldPrefixer
         $arrayKey = $this->buildArrayKey($useArraySyntax, $separator);
         $arrayName = $this->buildArrayName($name, $useArraySyntax, $separator);
 
-        return $prefix . $arrayKey . $arrayName;
+        $identifier = $prefix . $arrayKey . $arrayName;
+
+        return $this->isJavaScript() ? "`${identifier}`" : $identifier;
     }
 
     /**
