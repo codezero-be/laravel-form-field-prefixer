@@ -13,7 +13,7 @@ class HelpersTest extends TestCase
         $prefixer = formFieldPrefixer();
 
         $this->assertInstanceOf(FormFieldPrefixer::class, $prefixer);
-        $this->assertEquals('field', $prefixer->name('field'));
+        $this->assertEquals('field', $prefixer->name('field', null));
     }
 
     /** @test */
@@ -22,6 +22,6 @@ class HelpersTest extends TestCase
         $prefixer = formFieldPrefixer('prefix');
 
         $this->assertInstanceOf(FormFieldPrefixer::class, $prefixer);
-        $this->assertEquals('prefix_field', $prefixer->name('field'));
+        $this->assertEquals('prefix_field', $prefixer->name('field', null));
     }
 }

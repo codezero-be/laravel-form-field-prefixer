@@ -14,7 +14,7 @@ class FormFieldPrefixerTest extends TestCase
         $prefixer = FormFieldPrefixerFacade::make();
 
         $this->assertInstanceOf(FormFieldPrefixer::class, $prefixer);
-        $this->assertEquals('abc', $prefixer->name('abc'));
+        $this->assertEquals('abc', $prefixer->name('abc', null));
     }
 
     /** @test */
@@ -23,6 +23,6 @@ class FormFieldPrefixerTest extends TestCase
         $prefixer = FormFieldPrefixerFacade::make('prefix');
 
         $this->assertInstanceOf(FormFieldPrefixer::class, $prefixer);
-        $this->assertEquals('prefix_abc', $prefixer->name('abc'));
+        $this->assertEquals('prefix_abc', $prefixer->name('abc', null));
     }
 }

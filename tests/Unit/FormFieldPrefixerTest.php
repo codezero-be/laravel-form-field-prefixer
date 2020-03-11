@@ -12,9 +12,9 @@ class FormFieldPrefixerTest extends TestCase
     {
         $prefixer = new FormFieldPrefixer();
 
-        $this->assertEquals('abc', $prefixer->name('abc'));
-        $this->assertEquals('abc', $prefixer->id('abc'));
-        $this->assertEquals('abc', $prefixer->for('abc'));
+        $this->assertEquals('name="abc"', $prefixer->name('abc'));
+        $this->assertEquals('id="abc"', $prefixer->id('abc'));
+        $this->assertEquals('for="abc"', $prefixer->for('abc'));
         $this->assertEquals('abc', $prefixer->validationKey('abc'));
     }
 
@@ -23,9 +23,9 @@ class FormFieldPrefixerTest extends TestCase
     {
         $prefixer = new FormFieldPrefixer('prefix');
 
-        $this->assertEquals('prefix_abc', $prefixer->name('abc'));
-        $this->assertEquals('prefix_abc', $prefixer->id('abc'));
-        $this->assertEquals('prefix_abc', $prefixer->for('abc'));
+        $this->assertEquals('name="prefix_abc"', $prefixer->name('abc'));
+        $this->assertEquals('id="prefix_abc"', $prefixer->id('abc'));
+        $this->assertEquals('for="prefix_abc"', $prefixer->for('abc'));
         $this->assertEquals('prefix_abc', $prefixer->validationKey('abc'));
     }
 
@@ -34,9 +34,9 @@ class FormFieldPrefixerTest extends TestCase
     {
         $prefixer = (new FormFieldPrefixer())->withPrefix('prefix');
 
-        $this->assertEquals('prefix_abc', $prefixer->name('abc'));
-        $this->assertEquals('prefix_abc', $prefixer->id('abc'));
-        $this->assertEquals('prefix_abc', $prefixer->for('abc'));
+        $this->assertEquals('name="prefix_abc"', $prefixer->name('abc'));
+        $this->assertEquals('id="prefix_abc"', $prefixer->id('abc'));
+        $this->assertEquals('for="prefix_abc"', $prefixer->for('abc'));
         $this->assertEquals('prefix_abc', $prefixer->validationKey('abc'));
     }
 
@@ -45,9 +45,9 @@ class FormFieldPrefixerTest extends TestCase
     {
         $prefixer = (new FormFieldPrefixer())->asArray('arrayKey');
 
-        $this->assertEquals('abc[arrayKey]', $prefixer->name('abc'));
-        $this->assertEquals('abc_arrayKey', $prefixer->id('abc'));
-        $this->assertEquals('abc_arrayKey', $prefixer->for('abc'));
+        $this->assertEquals('name="abc[arrayKey]"', $prefixer->name('abc'));
+        $this->assertEquals('id="abc_arrayKey"', $prefixer->id('abc'));
+        $this->assertEquals('for="abc_arrayKey"', $prefixer->for('abc'));
         $this->assertEquals('abc.arrayKey', $prefixer->validationKey('abc'));
     }
 
@@ -56,9 +56,9 @@ class FormFieldPrefixerTest extends TestCase
     {
         $prefixer = (new FormFieldPrefixer('prefix'))->asArray('arrayKey');
 
-        $this->assertEquals('prefix_abc[arrayKey]', $prefixer->name('abc'));
-        $this->assertEquals('prefix_abc_arrayKey', $prefixer->id('abc'));
-        $this->assertEquals('prefix_abc_arrayKey', $prefixer->for('abc'));
+        $this->assertEquals('name="prefix_abc[arrayKey]"', $prefixer->name('abc'));
+        $this->assertEquals('id="prefix_abc_arrayKey"', $prefixer->id('abc'));
+        $this->assertEquals('for="prefix_abc_arrayKey"', $prefixer->for('abc'));
         $this->assertEquals('prefix_abc.arrayKey', $prefixer->validationKey('abc'));
     }
 
@@ -67,9 +67,9 @@ class FormFieldPrefixerTest extends TestCase
     {
         $prefixer = (new FormFieldPrefixer('prefix'))->asMultiDimensionalArray('arrayKey');
 
-        $this->assertEquals('prefix[arrayKey][abc]', $prefixer->name('abc'));
-        $this->assertEquals('prefix_arrayKey_abc', $prefixer->id('abc'));
-        $this->assertEquals('prefix_arrayKey_abc', $prefixer->for('abc'));
+        $this->assertEquals('name="prefix[arrayKey][abc]"', $prefixer->name('abc'));
+        $this->assertEquals('id="prefix_arrayKey_abc"', $prefixer->id('abc'));
+        $this->assertEquals('for="prefix_arrayKey_abc"', $prefixer->for('abc'));
         $this->assertEquals('prefix.arrayKey.abc', $prefixer->validationKey('abc'));
     }
 
@@ -78,10 +78,31 @@ class FormFieldPrefixerTest extends TestCase
     {
         $prefixer = (new FormFieldPrefixer())->asMultiDimensionalArray('arrayKey');
 
-        $this->assertEquals('abc[arrayKey]', $prefixer->name('abc'));
-        $this->assertEquals('abc_arrayKey', $prefixer->id('abc'));
-        $this->assertEquals('abc_arrayKey', $prefixer->for('abc'));
+        $this->assertEquals('name="abc[arrayKey]"', $prefixer->name('abc'));
+        $this->assertEquals('id="abc_arrayKey"', $prefixer->id('abc'));
+        $this->assertEquals('for="abc_arrayKey"', $prefixer->for('abc'));
         $this->assertEquals('abc.arrayKey', $prefixer->validationKey('abc'));
+    }
+
+    /** @test */
+    public function it_lets_you_change_the_attribute_name()
+    {
+        $prefixer = new FormFieldPrefixer();
+
+        $this->assertEquals('title="abc"', $prefixer->name('abc', 'title'));
+        $this->assertEquals('title="abc"', $prefixer->id('abc', 'title'));
+        $this->assertEquals('title="abc"', $prefixer->for('abc', 'title'));
+
+    }
+
+    /** @test */
+    public function it_returns_the_identifier_without_the_attribute_name()
+    {
+        $prefixer = new FormFieldPrefixer();
+
+        $this->assertEquals('abc', $prefixer->name('abc', null));
+        $this->assertEquals('abc', $prefixer->id('abc', null));
+        $this->assertEquals('abc', $prefixer->for('abc', null));
     }
 
     /** @test */
@@ -101,9 +122,9 @@ class FormFieldPrefixerTest extends TestCase
     {
         $prefixer = (new FormFieldPrefixer())->asMultiDimensionalArray('${ arrayKey }');
 
-        $this->assertEquals('`abc[${ arrayKey }]`', $prefixer->name('abc'));
-        $this->assertEquals('`abc_${ arrayKey }`', $prefixer->id('abc'));
-        $this->assertEquals('`abc_${ arrayKey }`', $prefixer->for('abc'));
+        $this->assertEquals(':name="`abc[${ arrayKey }]`"', $prefixer->name('abc'));
+        $this->assertEquals(':id="`abc_${ arrayKey }`"', $prefixer->id('abc'));
+        $this->assertEquals(':for="`abc_${ arrayKey }`"', $prefixer->for('abc'));
         $this->assertEquals('`abc.${ arrayKey }`', $prefixer->validationKey('abc'));
     }
 }

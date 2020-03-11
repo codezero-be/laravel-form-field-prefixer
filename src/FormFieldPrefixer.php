@@ -2,6 +2,7 @@
 
 namespace CodeZero\FormFieldPrefixer;
 
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
 class FormFieldPrefixer
@@ -108,36 +109,39 @@ class FormFieldPrefixer
      * Get the form field name.
      *
      * @param string $name
+     * @param string $attribute
      *
      * @return string
      */
-    public function name($name)
+    public function name($name, $attribute = 'name')
     {
-        return $this->buildFormFieldIdentifier($name, $this->isArray());
+        return $this->buildFormFieldIdentifier($name, $attribute, $this->isArray());
     }
 
     /**
      * Get the form field ID.
      *
      * @param string $id
+     * @param string $attribute
      *
      * @return string
      */
-    public function id($id)
+    public function id($id, $attribute = 'id')
     {
-        return $this->buildFormFieldIdentifier($id, false);
+        return $this->buildFormFieldIdentifier($id, $attribute, false);
     }
 
     /**
      * Get the label's "for" attribute.
      *
      * @param string $id
+     * @param string $attribute
      *
      * @return string
      */
-    public function for($id)
+    public function for($id, $attribute = 'for')
     {
-        return $this->buildFormFieldIdentifier($id, false);
+        return $this->buildFormFieldIdentifier($id, $attribute, false);
     }
 
     /**
@@ -151,7 +155,7 @@ class FormFieldPrefixer
     {
         $separator = $this->isArray() ? $this->getArrayValidationSeparator() : $this->getDefaultSeparator();
 
-        return $this->buildFormFieldIdentifier($key, false, $separator);
+        return $this->buildFormFieldIdentifier($key, null,false, $separator);
     }
 
     /**
@@ -188,13 +192,15 @@ class FormFieldPrefixer
      * Build the form field identifier.
      *
      * @param string $name
+     * @param string|null $attribute
      * @param bool $useArraySyntax
      * @param string|null $separator
      *
      * @return string
      */
-    protected function buildFormFieldIdentifier($name, $useArraySyntax, $separator = null)
+    protected function buildFormFieldIdentifier($name, $attribute, $useArraySyntax, $separator = null)
     {
+        $attribute = $this->buildAttributeName($attribute);
         $separator = $separator ?: $this->getDefaultSeparator();
 
         $prefix = $this->buildName($name);
@@ -203,7 +209,35 @@ class FormFieldPrefixer
 
         $identifier = $prefix . $arrayKey . $arrayName;
 
-        return $this->isJavaScript() ? "`${identifier}`" : $identifier;
+        if ($this->isJavaScript()) {
+            $identifier = "`{$identifier}`";
+        }
+
+        if ($attribute) {
+            return new HtmlString($attribute . '="' . $identifier . '"');
+        }
+
+        return $identifier;
+    }
+
+    /**
+     * Build the attribute name if needed.
+     *
+     * @param string|null $attribute
+     *
+     * @return string
+     */
+    protected function buildAttributeName($attribute)
+    {
+        if ( ! $attribute) {
+            return '';
+        }
+
+        if ($this->isJavaScript()) {
+            $attribute = ":{$attribute}";
+        }
+
+        return $attribute;
     }
 
     /**
