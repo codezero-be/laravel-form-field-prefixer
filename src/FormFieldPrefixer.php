@@ -107,49 +107,58 @@ class FormFieldPrefixer
     }
 
     /**
-     * Get the form field name.
+     * Get the form field's "name" attribute.
      *
      * @param string $name
-     * @param string $attribute
+     * @param string|null $attribute
      *
      * @return string
      */
     public function name($name, $attribute = 'name')
     {
-        return $this->buildFormFieldIdentifier($name, $attribute, $this->isArray());
+        return $this->buildAttribute(
+            $this->buildAttributeValue($name, $this->isArray()),
+            $this->buildAttributeName($attribute)
+        );
     }
 
     /**
-     * Get the form field ID.
+     * Get the form field's "id" attribute.
      *
      * @param string $id
-     * @param string $attribute
+     * @param string|null $attribute
      *
      * @return string
      */
     public function id($id, $attribute = 'id')
     {
-        return $this->buildFormFieldIdentifier($id, $attribute, false);
+        return $this->buildAttribute(
+            $this->buildAttributeValue($id, false),
+            $this->buildAttributeName($attribute)
+        );
     }
 
     /**
      * Get the label's "for" attribute.
      *
      * @param string $id
-     * @param string $attribute
+     * @param string|null $attribute
      *
      * @return string
      */
     public function for($id, $attribute = 'for')
     {
-        return $this->buildFormFieldIdentifier($id, $attribute, false);
+        return $this->buildAttribute(
+            $this->buildAttributeValue($id, false),
+            $this->buildAttributeName($attribute)
+        );
     }
 
     /**
-     * Get the input's value attribute.
+     * Get the input's "value" attribute.
      *
      * @param string $name
-     * @param string $attribute
+     * @param string|null $attribute
      *
      * @return string
      */
@@ -159,11 +168,8 @@ class FormFieldPrefixer
             ? $this->buildJavaScriptValueKey($name)
             : Session::getOldInput($this->validationKey($name));
 
-        if ( ! $attribute) {
-            return $value;
-        }
+        return $this->buildAttribute($value, $this->buildAttributeName($attribute));
 
-        return new HtmlString($this->buildAttributeName($attribute) . '="' . $value . '"');
     }
 
     /**
@@ -177,7 +183,7 @@ class FormFieldPrefixer
     {
         $separator = $this->isArray() ? $this->getArrayValidationSeparator() : $this->getDefaultSeparator();
 
-        return $this->buildFormFieldIdentifier($key, null,false, $separator);
+        return $this->buildAttributeValue($key,false, $separator);
     }
 
     /**
@@ -211,35 +217,20 @@ class FormFieldPrefixer
     }
 
     /**
-     * Build the form field identifier.
+     * Build the attribute.
      *
-     * @param string $name
+     * @param string $value
      * @param string|null $attribute
-     * @param bool $useArraySyntax
-     * @param string|null $separator
      *
      * @return string
      */
-    protected function buildFormFieldIdentifier($name, $attribute, $useArraySyntax, $separator = null)
+    protected function buildAttribute($value, $attribute)
     {
-        $attribute = $this->buildAttributeName($attribute);
-        $separator = $separator ?: $this->getDefaultSeparator();
-
-        $prefix = $this->buildName($name);
-        $arrayKey = $this->buildArrayKey($useArraySyntax, $separator);
-        $arrayName = $this->buildArrayName($name, $useArraySyntax, $separator);
-
-        $identifier = $prefix . $arrayKey . $arrayName;
-
-        if ($this->isJavaScript()) {
-            $identifier = "`{$identifier}`";
-        }
-
         if ($attribute) {
-            return new HtmlString($attribute . '="' . $identifier . '"');
+            return new HtmlString($attribute . '="' . $value . '"');
         }
 
-        return $identifier;
+        return $value;
     }
 
     /**
@@ -264,6 +255,32 @@ class FormFieldPrefixer
         }
 
         return $attribute;
+    }
+
+    /**
+     * Build the attribute value.
+     *
+     * @param string $name
+     * @param bool $useArraySyntax
+     * @param string|null $separator
+     *
+     * @return string
+     */
+    protected function buildAttributeValue($name, $useArraySyntax, $separator = null)
+    {
+        $separator = $separator ?: $this->getDefaultSeparator();
+
+        $prefix = $this->buildName($name);
+        $arrayKey = $this->buildArrayKey($useArraySyntax, $separator);
+        $arrayName = $this->buildArrayName($name, $useArraySyntax, $separator);
+
+        $identifier = $prefix . $arrayKey . $arrayName;
+
+        if ($this->isJavaScript()) {
+            $identifier = "`{$identifier}`";
+        }
+
+        return $identifier;
     }
 
     /**
