@@ -166,7 +166,7 @@ class FormFieldPrefixer
     {
         $value = $this->isJavaScript()
             ? $this->buildJavaScriptValueKey($name)
-            : Session::getOldInput($this->validationKey($name));
+            : e(Session::getOldInput($this->validationKey($name)));
 
         return $this->buildAttribute($value, $this->buildAttributeName($attribute));
     }

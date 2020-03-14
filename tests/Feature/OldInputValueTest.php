@@ -102,6 +102,18 @@ class OldInputValueTest extends TestCase
     }
 
     /** @test */
+    public function it_escapes_input_values()
+    {
+        Session::flashInput([
+            'abc' => 'test "value"'
+        ]);
+
+        $prefixer = new FormFieldPrefixer();
+
+        $this->assertEquals('value="test &quot;value&quot;"', $prefixer->value('abc'));
+    }
+
+    /** @test */
     public function it_builds_a_v_model_attribute_if_a_javascript_key_is_detected()
     {
         $prefixer = (new FormFieldPrefixer('prefix'))->asMultiDimensionalArray('${ arrayKey }');
