@@ -169,7 +169,44 @@ class FormFieldPrefixer
             : Session::getOldInput($this->validationKey($name));
 
         return $this->buildAttribute($value, $this->buildAttributeName($attribute));
+    }
 
+    /**
+     * Get the select's "v-model" binding when using javascript.
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    public function select($name)
+    {
+        if ( ! $this->isJavaScript()) {
+            return '';
+        }
+
+        return $this->buildAttribute(
+            $this->buildJavaScriptValueKey($name),
+            $this->buildAttributeName('v-model')
+        );
+    }
+
+    /**
+     * Get the "selected" attribute for the given option value.
+     *
+     * @param string $name
+     * @param string $value
+     *
+     * @return string
+     */
+    public function selected($name, $value)
+    {
+        $oldSelectedOption = Session::getOldInput($this->validationKey($name));
+
+        if ($oldSelectedOption != $value) {
+            return '';
+        }
+
+        return $this->buildAttribute('selected', $this->buildAttributeName('selected'));
     }
 
     /**
@@ -250,7 +287,7 @@ class FormFieldPrefixer
             return 'v-model';
         }
 
-        if ($this->isJavaScript()) {
+        if ($attribute !== 'v-model' && $this->isJavaScript()) {
             $attribute = ":{$attribute}";
         }
 
