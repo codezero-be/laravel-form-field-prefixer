@@ -2,6 +2,7 @@
 
 namespace CodeZero\FormFieldPrefixer;
 
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
@@ -145,6 +146,27 @@ class FormFieldPrefixer
     }
 
     /**
+     * Get the input's value attribute.
+     *
+     * @param string $name
+     * @param string $attribute
+     *
+     * @return string
+     */
+    public function value($name, $attribute = 'value')
+    {
+        $value = $this->isJavaScript()
+            ? $this->buildJavaScriptValueKey($name)
+            : Session::getOldInput($this->validationKey($name));
+
+        if ( ! $attribute) {
+            return $value;
+        }
+
+        return new HtmlString($this->buildAttributeName($attribute) . '="' . $value . '"');
+    }
+
+    /**
      * Get the validation key for the form field.
      *
      * @param string $key
@@ -233,6 +255,10 @@ class FormFieldPrefixer
             return '';
         }
 
+        if ($attribute === 'value' && $this->isJavaScript()) {
+            return 'v-model';
+        }
+
         if ($this->isJavaScript()) {
             $attribute = ":{$attribute}";
         }
@@ -308,6 +334,22 @@ class FormFieldPrefixer
     protected function buildArrayIdentifier($value, $useArraySyntax, $separator)
     {
         return $useArraySyntax ? "[{$value}]" : $separator . $value;
+    }
+
+    /**
+     * Build the javascript key that holds the inputs value.
+     *
+     * @param string $key
+     *
+     * @return string
+     */
+    protected function buildJavaScriptValueKey($key)
+    {
+        $key = "'{$key}'";
+        $key = $this->name($key, null);
+        $key = preg_replace('/`|\${\s*|\s*}/', '', $key);
+
+        return $key;
     }
 
     /**
