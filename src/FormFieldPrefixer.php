@@ -78,7 +78,7 @@ class FormFieldPrefixer
     public function asArray($arrayKey, $multiDimensional = false)
     {
         $this->arrayKey = $arrayKey;
-        $this->multiDimensional = $multiDimensional;
+        $this->multiDimensional = $multiDimensional && $this->prefix !== null;
 
         return $this;
     }
@@ -218,7 +218,9 @@ class FormFieldPrefixer
      */
     public function validationKey($key)
     {
-        $separator = $this->isArray() ? $this->getArrayValidationSeparator() : $this->getDefaultSeparator();
+        $separator = $this->isArray() || $this->isJavaScript()
+            ? $this->getArrayValidationSeparator()
+            : $this->getDefaultSeparator();
 
         return $this->buildAttributeValue($key,false, $separator);
     }
@@ -288,7 +290,7 @@ class FormFieldPrefixer
         }
 
         if ($attribute !== 'v-model' && $this->isJavaScript()) {
-            $attribute = ":{$attribute}";
+            return ":{$attribute}";
         }
 
         return $attribute;
@@ -399,7 +401,10 @@ class FormFieldPrefixer
      */
     protected function buildJavaScriptValueKey($key)
     {
-        $key = "'{$key}'";
+        if ($this->isMultiDimensionalArray()) {
+            $key = "'{$key}'";
+        }
+
         $key = $this->name($key, null);
         $key = preg_replace('/`|\${\s*|\s*}/', '', $key);
 
