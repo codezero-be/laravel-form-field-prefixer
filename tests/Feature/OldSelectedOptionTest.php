@@ -87,12 +87,42 @@ class OldSelectedOptionTest extends TestCase
     }
 
     /** @test */
-    public function it_builds_a_v_model_attribute_if_a_javascript_key_is_detected()
+    public function it_builds_a_v_model_attribute_if_a_javascript_prefix_is_provided()
+    {
+        $prefixer = new FormFieldPrefixer('${ prefix }');
+
+        $this->assertEquals('v-model="prefix_abc"', $prefixer->select('abc'));
+    }
+
+    /** @test */
+    public function it_builds_a_v_model_attribute_if_a_javascript_array_key_is_provided()
+    {
+        $prefixer = (new FormFieldPrefixer('prefix'))->asArray('${ arrayKey }');
+
+        $this->assertEquals('v-model="prefix_abc[arrayKey]"', $prefixer->select('abc'));
+    }
+
+    /** @test */
+    public function it_builds_a_v_model_attribute_if_a_javascript_array_key_is_provided_without_prefix()
+    {
+        $prefixer = (new FormFieldPrefixer())->asArray('${ arrayKey }');
+
+        $this->assertEquals('v-model="abc[arrayKey]"', $prefixer->select('abc'));
+    }
+
+    /** @test */
+    public function it_builds_a_v_model_attribute_if_a_multi_dimensional_array_key_is_provided()
     {
         $prefixer = (new FormFieldPrefixer('prefix'))->asMultiDimensionalArray('${ arrayKey }');
 
-        $this->assertEquals('', $prefixer->selected('abc', 'selected option value'));
-        $this->assertEquals('', $prefixer->selected('abc', 'other option value'));
         $this->assertEquals('v-model="prefix[arrayKey][\'abc\']"', $prefixer->select('abc'));
+    }
+
+    /** @test */
+    public function it_builds_a_v_model_attribute_if_a_multi_dimensional_array_key_is_provided_without_prefix()
+    {
+        $prefixer = (new FormFieldPrefixer())->asMultiDimensionalArray('${ arrayKey }');
+
+        $this->assertEquals('v-model="abc[arrayKey]"', $prefixer->select('abc'));
     }
 }

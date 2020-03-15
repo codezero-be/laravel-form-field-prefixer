@@ -118,7 +118,51 @@ class FormFieldPrefixerTest extends TestCase
     }
 
     /** @test */
+    public function it_builds_a_template_string_if_a_javascript_prefix_is_provided()
+    {
+        $prefixer = new FormFieldPrefixer('${ prefix }');
+
+        $this->assertEquals(':name="`${ prefix }_abc`"', $prefixer->name('abc'));
+        $this->assertEquals(':id="`${ prefix }_abc`"', $prefixer->id('abc'));
+        $this->assertEquals(':for="`${ prefix }_abc`"', $prefixer->for('abc'));
+        $this->assertEquals('`${ prefix }_abc`', $prefixer->validationKey('abc'));
+    }
+
+    /** @test */
     public function it_builds_a_template_string_if_a_javascript_array_key_is_provided()
+    {
+        $prefixer = (new FormFieldPrefixer('prefix'))->asArray('${ arrayKey }');
+
+        $this->assertEquals(':name="`prefix_abc[${ arrayKey }]`"', $prefixer->name('abc'));
+        $this->assertEquals(':id="`prefix_abc_${ arrayKey }`"', $prefixer->id('abc'));
+        $this->assertEquals(':for="`prefix_abc_${ arrayKey }`"', $prefixer->for('abc'));
+        $this->assertEquals('`prefix_abc.${ arrayKey }`', $prefixer->validationKey('abc'));
+    }
+
+    /** @test */
+    public function it_builds_a_template_string_if_a_javascript_array_key_is_provided_without_prefix()
+    {
+        $prefixer = (new FormFieldPrefixer())->asArray('${ arrayKey }');
+
+        $this->assertEquals(':name="`abc[${ arrayKey }]`"', $prefixer->name('abc'));
+        $this->assertEquals(':id="`abc_${ arrayKey }`"', $prefixer->id('abc'));
+        $this->assertEquals(':for="`abc_${ arrayKey }`"', $prefixer->for('abc'));
+        $this->assertEquals('`abc.${ arrayKey }`', $prefixer->validationKey('abc'));
+    }
+
+    /** @test */
+    public function it_builds_a_template_string_if_a_multi_dimensional_array_key_is_provided()
+    {
+        $prefixer = (new FormFieldPrefixer('prefix'))->asMultiDimensionalArray('${ arrayKey }');
+
+        $this->assertEquals(':name="`prefix[${ arrayKey }][abc]`"', $prefixer->name('abc'));
+        $this->assertEquals(':id="`prefix_${ arrayKey }_abc`"', $prefixer->id('abc'));
+        $this->assertEquals(':for="`prefix_${ arrayKey }_abc`"', $prefixer->for('abc'));
+        $this->assertEquals('`prefix.${ arrayKey }.abc`', $prefixer->validationKey('abc'));
+    }
+
+    /** @test */
+    public function it_builds_a_template_string_if_a_multi_dimensional_array_key_is_provided_without_prefix()
     {
         $prefixer = (new FormFieldPrefixer())->asMultiDimensionalArray('${ arrayKey }');
 
