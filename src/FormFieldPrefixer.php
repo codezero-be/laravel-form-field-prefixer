@@ -172,6 +172,24 @@ class FormFieldPrefixer
     }
 
     /**
+     * Get the "selected" attribute for the given option value.
+     *
+     * @param string $name
+     * @param string $value
+     * @param string|null $default
+     *
+     * @return string
+     */
+    public function selected($name, $value, $default = null)
+    {
+        if ($value != $this->getCurrentValue($name, $default)) {
+            return '';
+        }
+
+        return $this->buildAttribute('selected', $this->buildAttributeName('selected'));
+    }
+
+    /**
      * Get the select's "v-model" binding when using javascript.
      *
      * @param string $name
@@ -188,25 +206,6 @@ class FormFieldPrefixer
             $this->buildJavaScriptValueKey($name),
             $this->buildAttributeName('v-model')
         );
-    }
-
-    /**
-     * Get the "selected" attribute for the given option value.
-     *
-     * @param string $name
-     * @param string $value
-     *
-     * @return string
-     */
-    public function selected($name, $value)
-    {
-        $oldSelectedOption = Session::getOldInput($this->validationKey($name));
-
-        if ($oldSelectedOption != $value) {
-            return '';
-        }
-
-        return $this->buildAttribute('selected', $this->buildAttributeName('selected'));
     }
 
     /**
@@ -409,6 +408,19 @@ class FormFieldPrefixer
         $key = preg_replace('/`|\${\s*|\s*}/', '', $key);
 
         return $key;
+    }
+
+    /**
+     * Get the old input value or any default value.
+     *
+     * @param string $name
+     * @param string|null $default
+     *
+     * @return mixed
+     */
+    protected function getCurrentValue($name, $default)
+    {
+        return Session::hasOldInput() ? Session::getOldInput($this->validationKey($name)) : $default;
     }
 
     /**

@@ -23,6 +23,41 @@ class OldSelectedOptionTest extends TestCase
     }
 
     /** @test */
+    public function it_selects_a_default_option()
+    {
+        $prefixer = new FormFieldPrefixer();
+
+        $this->assertEquals('', $prefixer->selected('abc', 'other value', 'default value'));
+        $this->assertEquals('selected="selected"', $prefixer->selected('abc', 'default value', 'default value'));
+    }
+
+    /** @test */
+    public function it_prefers_the_old_value_over_the_default_value()
+    {
+        Session::flashInput([
+            'abc' => 'old value'
+        ]);
+
+        $prefixer = new FormFieldPrefixer();
+
+        $this->assertEquals('selected="selected"', $prefixer->selected('abc', 'old value', 'default value'));
+        $this->assertEquals('', $prefixer->selected('abc', 'default value', 'default value'));
+    }
+
+    /** @test */
+    public function it_prefers_old_values_even_when_empty()
+    {
+        Session::flashInput([
+            'abc' => null
+        ]);
+
+        $prefixer = new FormFieldPrefixer();
+
+        $this->assertEquals('', $prefixer->selected('abc', 'old value', 'default value'));
+        $this->assertEquals('', $prefixer->selected('abc', 'default value', 'default value'));
+    }
+
+    /** @test */
     public function it_builds_the_selected_attribute_with_prefix()
     {
         Session::flashInput([
