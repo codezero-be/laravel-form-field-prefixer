@@ -158,15 +158,16 @@ class FormFieldPrefixer
      * Get the input's "value" attribute.
      *
      * @param string $name
+     * @param string|null $default
      * @param string|null $attribute
      *
      * @return string
      */
-    public function value($name, $attribute = 'value')
+    public function value($name, $default = null, $attribute = 'value')
     {
         $value = $this->isJavaScript()
             ? $this->buildJavaScriptValueKey($name)
-            : e(Session::getOldInput($this->validationKey($name)));
+            : e($this->getCurrentValue($name, $default));
 
         return $this->buildAttribute($value, $this->buildAttributeName($attribute));
     }

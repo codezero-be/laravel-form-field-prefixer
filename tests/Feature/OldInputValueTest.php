@@ -21,6 +21,38 @@ class OldInputValueTest extends TestCase
     }
 
     /** @test */
+    public function it_accepts_a_default_value()
+    {
+        $prefixer = new FormFieldPrefixer();
+
+        $this->assertEquals('value="default value"', $prefixer->value('abc', 'default value'));
+    }
+
+    /** @test */
+    public function it_prefers_the_old_value_over_the_default_value()
+    {
+        Session::flashInput([
+            'abc' => 'old value'
+        ]);
+
+        $prefixer = new FormFieldPrefixer();
+
+        $this->assertEquals('value="old value"', $prefixer->value('abc', 'default value'));
+    }
+
+    /** @test */
+    public function it_prefers_old_values_even_when_empty()
+    {
+        Session::flashInput([
+            'abc' => null
+        ]);
+
+        $prefixer = new FormFieldPrefixer();
+
+        $this->assertEquals('value=""', $prefixer->value('abc', 'default value'));
+    }
+
+    /** @test */
     public function it_builds_the_value_attribute_with_prefix()
     {
         Session::flashInput([
@@ -85,7 +117,7 @@ class OldInputValueTest extends TestCase
 
         $prefixer = new FormFieldPrefixer();
 
-        $this->assertEquals('title="test value"', $prefixer->value('abc', 'title'));
+        $this->assertEquals('title="test value"', $prefixer->value('abc', null, 'title'));
 
     }
 
@@ -98,7 +130,7 @@ class OldInputValueTest extends TestCase
 
         $prefixer = new FormFieldPrefixer();
 
-        $this->assertEquals('test value', $prefixer->value('abc', null));
+        $this->assertEquals('test value', $prefixer->value('abc', null, null));
     }
 
     /** @test */
