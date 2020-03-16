@@ -148,10 +148,7 @@ class FormFieldPrefixer
      */
     public function for($id, $attribute = 'for')
     {
-        return $this->buildAttribute(
-            $this->buildAttributeValue($id, false),
-            $this->buildAttributeName($attribute)
-        );
+        return $this->id($id, $attribute);
     }
 
     /**
