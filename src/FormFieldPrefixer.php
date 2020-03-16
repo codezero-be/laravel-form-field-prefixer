@@ -180,7 +180,7 @@ class FormFieldPrefixer
      */
     public function selected($name, $value, $default = null)
     {
-        if ($value != $this->getCurrentValue($name, $default)) {
+        if ($this->isJavaScript() || $value != $this->getCurrentValue($name, $default)) {
             return '';
         }
 

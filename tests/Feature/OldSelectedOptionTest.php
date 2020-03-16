@@ -160,4 +160,13 @@ class OldSelectedOptionTest extends TestCase
 
         $this->assertEquals('v-model="abc[arrayKey]"', $prefixer->select('abc'));
     }
+
+    /** @test */
+    public function it_does_not_render_a_selected_attribute_if_a_javascript_key_is_provided()
+    {
+        $prefixer = (new FormFieldPrefixer('prefix'))->asMultiDimensionalArray('${ arrayKey }');
+
+        $this->assertEquals('', $prefixer->selected('abc', 'old value', 'default value'));
+        $this->assertEquals('', $prefixer->selected('abc', 'default value', 'default value'));
+    }
 }
