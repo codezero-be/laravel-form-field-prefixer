@@ -143,6 +143,22 @@ The partial will contain the same templates as the previous examples, but this t
 @enderror
 ```
 
+Alternatively, you can also use the field name as the array key, by not specifying a key in advance:
+
+```blade
+@include('forms.address', ['prefixer' => FormFieldPrefixer::make('client')->asArray()])
+```
+
+Now the `address` field will look like this:
+
+```blade
+<input name="client[address]" id="client_address" value="">
+
+@error('client.address')
+    {{ $message }}
+@enderror
+```
+
 Again, if you did not specify a prefix, `client_` would be stripped off.
 
 ### Multi Dimensional Array Forms
