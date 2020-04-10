@@ -93,6 +93,20 @@ class OldInputValueTest extends TestCase
     }
 
     /** @test */
+    public function it_builds_the_value_attribute_with_prefixed_arrays_using_the_field_name_as_array_key()
+    {
+        Session::flashInput([
+            'prefix' => [
+                'abc' => 'test value'
+            ]
+        ]);
+
+        $prefixer = (new FormFieldPrefixer('prefix'))->asArray();
+
+        $this->assertEquals('value="test value"', $prefixer->value('abc'));
+    }
+
+    /** @test */
     public function it_builds_the_value_attribute_with_multi_dimensional_arrays()
     {
         Session::flashInput([

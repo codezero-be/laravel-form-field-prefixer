@@ -41,7 +41,7 @@ class FormFieldPrefixerTest extends TestCase
     }
 
     /** @test */
-    public function it_builds_input_identifiers_as_an_array()
+    public function it_builds_input_identifiers_as_an_array_without_prefix()
     {
         $prefixer = (new FormFieldPrefixer())->asArray('arrayKey');
 
@@ -60,6 +60,17 @@ class FormFieldPrefixerTest extends TestCase
         $this->assertEquals('id="prefix_abc_arrayKey"', $prefixer->id('abc'));
         $this->assertEquals('for="prefix_abc_arrayKey"', $prefixer->for('abc'));
         $this->assertEquals('prefix_abc.arrayKey', $prefixer->validationKey('abc'));
+    }
+
+    /** @test */
+    public function it_builds_input_identifiers_using_the_field_name_as_array_key()
+    {
+        $prefixer = (new FormFieldPrefixer('prefix'))->asArray();
+
+        $this->assertEquals('name="prefix[abc]"', $prefixer->name('abc'));
+        $this->assertEquals('id="prefix_abc"', $prefixer->id('abc'));
+        $this->assertEquals('for="prefix_abc"', $prefixer->for('abc'));
+        $this->assertEquals('prefix.abc', $prefixer->validationKey('abc'));
     }
 
     /** @test */

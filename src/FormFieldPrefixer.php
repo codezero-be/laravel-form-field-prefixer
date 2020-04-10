@@ -23,8 +23,14 @@ class FormFieldPrefixer
     protected $arrayKey = null;
 
     /**
-     * Indicator if we are generating a form field name
-     * with a multi dimensional array.
+     * Indicator if we are generating a form field name as an array.
+     *
+     * @var bool
+     */
+    protected $isArray = false;
+
+    /**
+     * Indicator if we are generating a form field name with a multi dimensional array.
      *
      * @var bool
      */
@@ -75,9 +81,10 @@ class FormFieldPrefixer
      *
      * @return $this
      */
-    public function asArray($arrayKey, $multiDimensional = false)
+    public function asArray($arrayKey = null, $multiDimensional = false)
     {
         $this->arrayKey = $arrayKey;
+        $this->isArray = true;
         $this->multiDimensional = $multiDimensional && $this->prefix !== null;
 
         return $this;
@@ -229,11 +236,11 @@ class FormFieldPrefixer
      */
     public function isArray()
     {
-        return ! is_null($this->arrayKey);
+        return $this->isArray;
     }
 
     /**
-     * Check if the form field is an array.
+     * Check if the form field is a multi dimensional array.
      *
      * @return bool
      */
@@ -250,6 +257,16 @@ class FormFieldPrefixer
     public function hasPrefix()
     {
         return !! $this->prefix;
+    }
+
+    /**
+     * Check if the form field has an array key.
+     *
+     * @return bool
+     */
+    public function hasArrayKey()
+    {
+        return ! is_null($this->arrayKey);
     }
 
     /**
@@ -307,7 +324,7 @@ class FormFieldPrefixer
         $separator = $separator ?: $this->getDefaultSeparator();
 
         $prefix = $this->buildName($name);
-        $arrayKey = $this->buildArrayKey($useArraySyntax, $separator);
+        $arrayKey = $this->buildArrayKey($name, $useArraySyntax, $separator);
         $arrayName = $this->buildArrayName($name, $useArraySyntax, $separator);
 
         $identifier = $prefix . $arrayKey . $arrayName;
@@ -332,7 +349,7 @@ class FormFieldPrefixer
             return $name;
         }
 
-        if ($this->isMultiDimensionalArray()) {
+        if ($this->isMultiDimensionalArray() || ($this->isArray() && ! $this->hasArrayKey())) {
             return $this->prefix;
         }
 
@@ -342,18 +359,19 @@ class FormFieldPrefixer
     /**
      * Build the array key part of the form field identifier if needed.
      *
+     * @param string $name
      * @param bool $useArraySyntax
      * @param string $separator
      *
      * @return string
      */
-    protected function buildArrayKey($useArraySyntax, $separator)
+    protected function buildArrayKey($name, $useArraySyntax, $separator)
     {
         if ( ! $this->isArray()) {
             return '';
         }
 
-        return $this->buildArrayIdentifier($this->arrayKey, $useArraySyntax, $separator);
+        return $this->buildArrayIdentifier($this->arrayKey ?: $name, $useArraySyntax, $separator);
     }
 
     /**
@@ -368,7 +386,7 @@ class FormFieldPrefixer
      */
     protected function buildArrayName($name, $useArraySyntax, $separator)
     {
-        if ( ! $this->hasPrefix() || ! $this->isMultiDimensionalArray()) {
+        if ( ! $this->isMultiDimensionalArray()) {
             return '';
         }
 
@@ -398,7 +416,7 @@ class FormFieldPrefixer
      */
     protected function buildJavaScriptValueKey($key)
     {
-        if ($this->isMultiDimensionalArray()) {
+        if ($this->isMultiDimensionalArray() || ($this->isArray() && ! $this->hasArrayKey())) {
             $key = "'{$key}'";
         }
 

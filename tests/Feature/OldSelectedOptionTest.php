@@ -104,6 +104,22 @@ class OldSelectedOptionTest extends TestCase
     }
 
     /** @test */
+    public function it_builds_the_selected_attribute_with_prefixed_arrays_using_the_field_name_as_array_key()
+    {
+        Session::flashInput([
+            'prefix' => [
+                'abc' => 'selected option value'
+            ]
+        ]);
+
+        $prefixer = (new FormFieldPrefixer('prefix'))->asArray();
+
+        $this->assertEquals('selected="selected"', $prefixer->selected('abc', 'selected option value'));
+        $this->assertEquals('', $prefixer->selected('abc', 'other option value'));
+        $this->assertEquals('', $prefixer->select('abc'));
+    }
+
+    /** @test */
     public function it_builds_the_selected_attribute_with_multi_dimensional_arrays()
     {
         Session::flashInput([
