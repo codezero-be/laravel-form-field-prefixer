@@ -1,7 +1,7 @@
 # Laravel Form Field Prefixer
 
 [![GitHub release](https://img.shields.io/github/release/codezero-be/laravel-form-field-prefixer.svg?style=flat-square)](CHANGELOG.md)
-[![Laravel](https://img.shields.io/badge/laravel-8-red?style=flat-square)](https://laravel.com)
+[![Laravel](https://img.shields.io/badge/laravel-8-red?style=flat-square&logo=laravel)](https://laravel.com)
 [![License](https://img.shields.io/packagist/l/codezero/laravel-form-field-prefixer.svg?style=flat-square)](LICENSE.md)
 [![Build Status](https://img.shields.io/scrutinizer/build/g/codezero-be/laravel-form-field-prefixer/master?style=flat-square)](https://scrutinizer-ci.com/g/codezero-be/laravel-form-field-prefixer/build-status/master)
 [![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/codezero-be/laravel-form-field-prefixer/master?style=flat-square)](https://scrutinizer-ci.com/g/codezero-be/laravel-form-field-prefixer/?branch=master)
