@@ -11,6 +11,8 @@ matrix:
           env: ILLUMINATE_VERSION=8.* TESTBENCH_VERSION=6.*
         - php: 7.4
           env: ILLUMINATE_VERSION=7.* TESTBENCH_VERSION=5.*
+        - php: 8.0
+          env: ILLUMINATE_VERSION=8.* TESTBENCH_VERSION=6.*
 
 before_script:
 

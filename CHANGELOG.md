@@ -2,6 +2,10 @@
 
 All Notable changes to **Laravel Form Field Prefixer** will be documented in this file.
 
+## 1.3.0 (2021-04-11)
+
+- Add support for PHP 8
+
 ## 1.2.0 (2020-09-08)
 
 - Add support for Laravel 8
