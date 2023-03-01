@@ -110,7 +110,7 @@ class FormFieldPrefixer
      */
     public function isJavaScript()
     {
-        return Str::startsWith($this->prefix, '${') || Str::startsWith($this->arrayKey, '${');
+        return Str::startsWith($this->prefix ?: '', '${') || Str::startsWith($this->arrayKey ?: '', '${');
     }
 
     /**
